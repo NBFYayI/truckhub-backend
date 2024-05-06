@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.status(200).send({
-        success: true,
-        message: "fuckyou"
-    });
+router.get("/", (req, res) => {
+  res.status(200).send({
+    success: true,
+    message: "fuckyouhealth" + req.query.param1,
+  });
 });
 
 module.exports = router;
