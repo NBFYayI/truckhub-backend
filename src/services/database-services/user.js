@@ -17,7 +17,7 @@ class UserService {
       const res = await userModel.find({
         username: username,
       });
-      if (!res) {
+      if (res.length == 0) {
         return false;
       } else {
         return true;
@@ -32,15 +32,9 @@ class UserService {
       const doc = {
         username: username,
         password: password,
-        _id: new ObjectID(),
+        //_id: new ObjectID(),
       };
-      userModel.create(doc, (err, user) => {
-        if (err) {
-          console.error(err);
-        } else {
-          console.log("User created:", user);
-        }
-      });
+      userModel.create(doc);
     } catch (error) {
       throw new Error("error in checkUsername" + error.message);
     }
