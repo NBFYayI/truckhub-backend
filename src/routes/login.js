@@ -31,11 +31,18 @@ router.post("/", async (req, res) => {
       throw new Error("not sure what happened");
     }
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send({
-      success: false,
-      message: error.message,
-    });
+    if (error.code == "400") {
+      res.status(400).send({
+        success: false,
+        message: "login failed: username not found",
+      });
+    } else {
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
   }
 });
 
