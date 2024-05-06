@@ -1,9 +1,9 @@
-const loginModel = require("../../models/login");
+const userModel = require("../../models/login");
 
 class UserService {
   async getUser(username) {
     try {
-      const res = await loginModel.find({
+      const res = await userModel.find({
         username: username,
       });
       return res;
@@ -17,10 +17,32 @@ class UserService {
       const res = await userModel.find({
         username: username,
       });
-
-      return res;
+      if (!res) {
+        return false;
+      } else {
+        return true;
+      }
     } catch (error) {
-      throw new Error("error in getUser" + error.message);
+      throw new Error("error in checkUsername" + error.message);
+    }
+  }
+
+  async createUser(username, password) {
+    try {
+      const doc = {
+        username: username,
+        password: password,
+        _id: new ObjectID(),
+      };
+      userModel.create(doc, (err, user) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log("User created:", user);
+        }
+      });
+    } catch (error) {
+      throw new Error("error in checkUsername" + error.message);
     }
   }
 }

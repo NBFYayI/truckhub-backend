@@ -6,12 +6,14 @@ const cors = require("cors");
 // Import routes
 const healthRoute = require("./routes/health");
 const loginRoute = require("./routes/login");
+const registerRoute = require("./routes/register");
 
 // Routes
 app.use(cors());
 app.use(express.json());
 app.use("/health", healthRoute);
 app.use("/login", loginRoute);
+app.use("/register", registerRoute);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
