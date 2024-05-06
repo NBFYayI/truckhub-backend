@@ -1,4 +1,9 @@
-// const userService = require("../services/database-services/user");
+const { userService } = require("../services/database-services/user");
 
-// userService.getUser();
-// async function
+async function userInfo(username) {
+  return userService.getUser(username);
+}
+
+module.exports = {
+  userInfo,
+};
