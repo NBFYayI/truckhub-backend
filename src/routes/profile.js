@@ -4,11 +4,11 @@ const { getProfile, updateProfile } = require("../controllers/profile-control");
 
 router.get("/", async (req, res) => {
   try {
-    const username = req.body.username;
+    const username = req.query.username;
     console.log(username);
     const doc = await getProfile(username);
     if (doc.length == 0) {
-      res.status(400).send({
+      res.status(404).send({
         success: false,
         message: "failed to get profile: username does not exist",
       });
