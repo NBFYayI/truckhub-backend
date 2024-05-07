@@ -15,7 +15,10 @@ async function login(username, password) {
     const r = await userService.getUser(username);
     //console.log(r);
     if (r.length == 0) {
-      return 1;
+      //return 1;
+      const e = new Error("username not found");
+      e.code = "400";
+      throw e;
       //throw new Error("username not found");
     }
     if (password != r[0].password) {
@@ -35,8 +38,9 @@ async function register(username, password) {
       return 1;
     }
     const r = await userService.createUser(username, password);
+    const pf = await userService.updateUserProfile(username);
     //console.log(r);
-    return r;
+    return pf;
   } catch (error) {
     throw new Error("error in createUser" + error.message);
   }

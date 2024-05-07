@@ -1,4 +1,5 @@
 const userModel = require("../../models/login");
+const profileModel = require("../../models/profile");
 
 class UserService {
   async getUser(username) {
@@ -36,7 +37,43 @@ class UserService {
       };
       userModel.create(doc);
     } catch (error) {
-      throw new Error("error in checkUsername" + error.message);
+      throw new Error("error in checkUsername: " + error.message);
+    }
+  }
+
+  async getUserProfile(username) {
+    try {
+      const res = await profileModel.find({
+        username: username,
+      });
+      return res;
+    } catch (error) {
+      throw new Error("error in getUserProfile: " + error.message);
+    }
+  }
+
+  async updateUserProfile(
+    username,
+    firstName = "",
+    lastName = "",
+    occupation = "",
+    email = ""
+  ) {
+    try {
+      const filter = { username: username };
+      const update = {
+        firstName: firstName,
+        lastName: lastName,
+        occupation: occupation,
+        email: email,
+      };
+      const doc = await profileModel.findOneAndUpdate(filter, update, {
+        new: true,
+        upsert: true,
+      });
+      return doc;
+    } catch (error) {
+      throw new Error("error in checkUsername: " + error.message);
     }
   }
 }
