@@ -29,7 +29,8 @@ async function login(username, password) {
     }
     return 0;
   } catch (error) {
-    throw new Error(error.message);
+    throw error;
+    //throw new Error(error.message);
   }
 }
 
@@ -53,7 +54,8 @@ async function register(username, password) {
     //console.log(r);
     return pf;
   } catch (error) {
-    throw new Error("error in createUser: " + error.message);
+    throw error;
+    //throw new Error("error in createUser: " + error.message);
   }
 }
 

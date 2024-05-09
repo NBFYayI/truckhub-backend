@@ -10,7 +10,8 @@ async function getProfile(username) {
     }
     return r;
   } catch (error) {
-    throw new Error("error in getProfile: " + error.message);
+    throw error;
+    //throw new Error("error in getProfile: " + error.message);
   }
 }
 
