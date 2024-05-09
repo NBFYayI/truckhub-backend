@@ -18,13 +18,14 @@ class UserService {
       const res = await userModel.find({
         username: username,
       });
+      console.log(res);
       if (res.length == 0) {
         return false;
       } else {
         return true;
       }
     } catch (error) {
-      throw new Error("error in checkUsername" + error.message);
+      throw new Error("error in checkUsername: " + error.message);
     }
   }
 
@@ -60,7 +61,7 @@ class UserService {
       });
       return doc;
     } catch (error) {
-      throw new Error("error in checkUsername: " + error.message);
+      throw new Error("error in updateUserProfile: " + error.message);
     }
   }
 }

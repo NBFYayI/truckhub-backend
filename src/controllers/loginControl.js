@@ -6,7 +6,7 @@ async function userInfo(username) {
     //console.log(r);
     return r;
   } catch (error) {
-    throw new Error("error in getUser" + error.message);
+    throw new Error("error in getUser: " + error.message);
   }
 }
 
@@ -42,7 +42,14 @@ async function register(username, password) {
       throw e;
     }
     const r = await userService.createUser(username, password);
-    const pf = await userService.updateUserProfile(username);
+    const filter = { username: username };
+    const update = {
+      firstName: "",
+      lastName: "",
+      occupation: "",
+      email: "",
+    };
+    const pf = await userService.updateUserProfile(filter, update);
     //console.log(r);
     return pf;
   } catch (error) {
