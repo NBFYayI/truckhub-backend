@@ -52,21 +52,8 @@ class UserService {
     }
   }
 
-  async updateUserProfile(
-    username,
-    firstName = "",
-    lastName = "",
-    occupation = "",
-    email = ""
-  ) {
+  async updateUserProfile(filter, update) {
     try {
-      const filter = { username: username };
-      const update = {
-        firstName: firstName,
-        lastName: lastName,
-        occupation: occupation,
-        email: email,
-      };
       const doc = await profileModel.findOneAndUpdate(filter, update, {
         new: true,
         upsert: true,

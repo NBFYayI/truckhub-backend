@@ -17,12 +17,14 @@ async function login(username, password) {
     if (r.length == 0) {
       //return 1;
       const e = new Error("username not found");
-      e.code = "400";
+      e.code = "404";
       throw e;
       //throw new Error("username not found");
     }
     if (password != r[0].password) {
-      return 2;
+      const e = new Error("wrong password");
+      e.code = "400";
+      throw e;
       //throw new Error("wrong password");
     }
     return 0;

@@ -12,24 +12,25 @@ router.post("/", async (req, res) => {
     // const info = await userInfo(username);
     // console.log(info);
     const reg = await register(username, password);
-    if (reg == 1) {
-      res.status(400).send({
+
+    res.status(200).send({
+      success: true,
+      message: "successfully registered",
+      data: reg,
+    });
+  } catch (error) {
+    if (error.code) {
+      res.status(error.code).send({
         success: false,
-        message: "username already exists",
+        message: "failed to register: " + error.message,
       });
     } else {
-      res.status(200).send({
-        success: true,
-        message: "successfully registered",
-        data: reg,
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
       });
     }
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send({
-      success: false,
-      message: error.message,
-    });
   }
 });
 

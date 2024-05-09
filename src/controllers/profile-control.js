@@ -3,6 +3,11 @@ const { userService } = require("../services/database-services/user");
 async function getProfile(username) {
   try {
     const r = await userService.getUserProfile(username);
+    if (r.length == 0) {
+      const e = new Error("username not found");
+      e.code = "404";
+      throw e;
+    }
     return r;
   } catch (error) {
     throw new Error("error in getProfile: " + error.message);
@@ -11,13 +16,14 @@ async function getProfile(username) {
 
 async function updateProfile(username, firstName, lastName, occupation, email) {
   try {
-    const r = await userService.updateUserProfile(
-      username,
-      firstName,
-      lastName,
-      occupation,
-      email
-    );
+    const filter = { username: username };
+    const update = {
+      firstName: firstName,
+      lastName: lastName,
+      occupation: occupation,
+      email: email,
+    };
+    const r = await userService.updateUserProfile(filter, update);
     return r;
   } catch (error) {
     throw new Error("error in updateProfile: " + error.message);

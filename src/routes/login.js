@@ -12,31 +12,28 @@ router.post("/", async (req, res) => {
     // const info = await userInfo(username);
     // console.log(info);
     const loginRes = await login(username, password);
-    if (loginRes == 0) {
+    if (loginRes === 0) {
       res.status(200).send({
         success: true,
         message: "login success",
       });
-    } else if (loginRes == 1) {
-      res.status(400).send({
-        success: false,
-        message: "login failed: username not found",
-      });
-    } else if (loginRes == 2) {
-      res.status(403).send({
-        success: false,
-        message: "login failed: incorrect password",
-      });
     } else {
-      throw new Error("not sure what happened");
+      throw new Error("not sure what happened in login controller");
     }
   } catch (error) {
-    if (error.code == "400") {
-      res.status(400).send({
+    if (error.code) {
+      res.status(error.code).send({
         success: false,
-        message: "login failed: username not found",
+        message: "login failed: " + error.message,
       });
-    } else {
+    }
+    // else if(error.code == "404"){
+    //   res.status(404).send({
+    //     success: false,
+    //     message: "login failed: " + error.message,
+    //   });
+    // }
+    else {
       console.error(error.message);
       res.status(500).send({
         success: false,

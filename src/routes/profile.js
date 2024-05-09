@@ -7,24 +7,24 @@ router.get("/", async (req, res) => {
     const username = req.query.username;
     console.log(username);
     const doc = await getProfile(username);
-    if (doc.length == 0) {
-      res.status(404).send({
+    res.status(200).send({
+      success: true,
+      message: "profile loaded",
+      data: doc[0],
+    });
+  } catch (error) {
+    if (error.code) {
+      res.status(error.code).send({
         success: false,
-        message: "failed to get profile: username does not exist",
+        message: "cannot get profile: " + error.message,
       });
     } else {
-      res.status(200).send({
-        success: true,
-        message: "profile loaded",
-        data: doc[0],
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
       });
     }
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send({
-      success: false,
-      message: error.message,
-    });
   }
 });
 
