@@ -37,14 +37,16 @@ async function register(username, password) {
   try {
     const exist = await userService.checkUsernameExist(username);
     if (exist) {
-      return 1;
+      const e = new Error("username already exist");
+      e.code = "400";
+      throw e;
     }
     const r = await userService.createUser(username, password);
     const pf = await userService.updateUserProfile(username);
     //console.log(r);
     return pf;
   } catch (error) {
-    throw new Error("error in createUser" + error.message);
+    throw new Error("error in createUser: " + error.message);
   }
 }
 

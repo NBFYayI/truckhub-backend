@@ -35,9 +35,9 @@ class UserService {
         password: password,
         //_id: new ObjectID(),
       };
-      userModel.create(doc);
+      await userModel.create(doc);
     } catch (error) {
-      throw new Error("error in checkUsername: " + error.message);
+      throw new Error("error in createUser: " + error.message);
     }
   }
 
