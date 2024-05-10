@@ -1,9 +1,18 @@
 const { postService } = require("../services/database-services/post");
 const { nanoid } = require("nanoid");
 
-async function getPost() {
+async function getPost(id, author, title, content, tags, origin) {
   try {
-    const r = await postService.getPost({});
+    const filter = {};
+
+    if (id) filter._id = id;
+    if (author) filter.author = author;
+    if (title) filter.title = title;
+    if (content) filter.content = { $regex: content, $options: "i" };
+    if (tags && tags.length) filter.tags = { $in: tags };
+    if (origin) filter.origin = origin;
+
+    const r = await postService.getPost(filter);
     return r;
   } catch (error) {
     throw new Error("error in getPost: " + error.message);

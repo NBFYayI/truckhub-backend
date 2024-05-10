@@ -8,8 +8,13 @@ const {
 
 router.get("/", async (req, res) => {
   try {
-    const id = req.query.id;
-    const doc = await getPost();
+    const id = req.query.id ? req.query.id : undefined;
+    const author = req.query.author ? req.query.author : undefined;
+    const title = req.query.title ? req.query.title : undefined;
+    const content = req.query.content ? req.query.content : undefined;
+    const tags = req.query.tags ? req.query.tags : undefined;
+    const origin = req.query.origin ? req.query.origin : undefined;
+    const doc = await getPost(id, author, title, content, tags, origin);
     res.status(200).send({
       success: true,
       message: "post loaded",
