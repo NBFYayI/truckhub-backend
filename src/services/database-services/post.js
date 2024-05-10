@@ -1,4 +1,4 @@
-const postModel = require("../../models/posts");
+const postModel = require("../../models/posts.js");
 
 class PostService {
   async getPost(filter) {
@@ -12,7 +12,7 @@ class PostService {
 
   async createPost(post) {
     try {
-      postModel.create(post);
+      const r = await postModel.create(post);
     } catch (error) {
       throw new Error("error in service: createPost: " + error.message);
     }
@@ -22,7 +22,6 @@ class PostService {
     try {
       const doc = await postModel.findOneAndUpdate(filter, update, {
         new: true,
-        upsert: true,
       });
       return doc;
     } catch (error) {
