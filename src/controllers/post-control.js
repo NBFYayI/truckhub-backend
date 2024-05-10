@@ -46,7 +46,7 @@ async function searchPost(
     if (tags && tags.length) filter.tags = { $in: tags };
     if (origin) filter.origin = origin;
 
-    const sortCriteria = {};
+    const sortCriteria = { isComment: "asc" };
     sortCriteria[sortfield] = order;
     const options = {
       sort: sortCriteria,

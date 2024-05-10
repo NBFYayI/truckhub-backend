@@ -152,7 +152,7 @@ router.post("/newcom", async (req, res) => {
     const doc = await makeNewComment(author, content, replyTo, origin, status);
     res.status(200).send({
       success: true,
-      message: "successfully created post",
+      message: "successfully created comment",
       data: doc,
     });
   } catch (error) {
