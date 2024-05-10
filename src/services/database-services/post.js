@@ -10,6 +10,15 @@ class PostService {
     }
   }
 
+  async searchPost(filter, option) {
+    try {
+      const res = await postModel.find(filter, null, option);
+      return res;
+    } catch (error) {
+      throw new Error("error in service: searchPost" + error.message);
+    }
+  }
+
   async createPost(post) {
     try {
       const r = await postModel.create(post);

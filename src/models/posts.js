@@ -15,9 +15,10 @@ const postSchema = new mongoose.Schema({
   createdAt: Date,
   updatedAt: Date,
   tags: [String],
-  status: String,
+  status: { type: String, default: "public" },
   replyTo: String,
   origin: String,
+  isComment: { type: Boolean, default: false },
 });
 
 const postModel = userDBConection.model("posts", postSchema, "posts");
