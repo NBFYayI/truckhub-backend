@@ -34,7 +34,8 @@ async function searchPost(
   sortfield,
   order,
   skip,
-  limit
+  limit,
+  cFlag
 ) {
   try {
     const filter = {};
@@ -45,6 +46,7 @@ async function searchPost(
     if (content) filter.content = { $regex: content, $options: "i" };
     if (tags && tags.length) filter.tags = { $in: tags };
     if (origin) filter.origin = origin;
+    if (cFlag) filter.isComment = cFlag;
 
     const sortCriteria = { isComment: "asc" };
     sortCriteria[sortfield] = order;
