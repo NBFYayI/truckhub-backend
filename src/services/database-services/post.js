@@ -37,6 +37,24 @@ class PostService {
       throw new Error("error in service: updatePost: " + error.message);
     }
   }
+
+  async deleteCom(id) {
+    try {
+      const doc = await postModel.findByIdAndDelete(id);
+      return doc;
+    } catch (error) {
+      throw new Error("error in service: deleteCom: " + error.message);
+    }
+  }
+
+  async deletePost(filter) {
+    try {
+      const doc = await postModel.deleteMany(filter);
+      return doc;
+    } catch (error) {
+      throw new Error("error in service: deletePost: " + error.message);
+    }
+  }
 }
 const postService = new PostService();
 module.exports = { postService };

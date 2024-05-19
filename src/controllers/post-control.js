@@ -176,6 +176,34 @@ async function updateComment(id, content, replyTo, status) {
   }
 }
 
+async function deleteComment(id) {
+  try {
+    const r = await postService.deleteCom(id);
+    if (!r) {
+      const e = new Error("comment not found");
+      e.code = "404";
+      throw e;
+    }
+    return r;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function deletePost(id) {
+  try {
+    const filter = { origin: id };
+    const r = await postService.deletePost(filter);
+    if (!r) {
+      const e = new Error("post not found");
+      e.code = "404";
+      throw e;
+    }
+    return r;
+  } catch (error) {
+    throw error;
+  }
+}
 module.exports = {
   getPost,
   makeNewPost,
@@ -183,4 +211,6 @@ module.exports = {
   makeNewComment,
   updateComment,
   searchPost,
+  deleteComment,
+  deletePost,
 };

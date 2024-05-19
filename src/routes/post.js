@@ -7,6 +7,8 @@ const {
   makeNewComment,
   updateComment,
   searchPost,
+  deletePost,
+  deleteComment,
 } = require("../controllers/post-control");
 
 router.get("/", async (req, res) => {
@@ -190,6 +192,56 @@ router.post("/updatecom", async (req, res) => {
       res.status(error.code).send({
         success: false,
         message: "failed to update post: " + error.message,
+      });
+    } else {
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+});
+
+router.post("/deletecom", async (req, res) => {
+  try {
+    const id = req.body.id;
+    const doc = await deleteComment(id);
+    res.status(200).send({
+      success: true,
+      message: "successfully deleted comment",
+      data: doc,
+    });
+  } catch (error) {
+    if (error.code) {
+      res.status(error.code).send({
+        success: false,
+        message: "failed to delete comment: " + error.message,
+      });
+    } else {
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+});
+
+router.post("/deletepost", async (req, res) => {
+  try {
+    const id = req.body.id;
+    const doc = await deletePost(id);
+    res.status(200).send({
+      success: true,
+      message: "successfully deleted comment",
+      data: doc,
+    });
+  } catch (error) {
+    if (error.code) {
+      res.status(error.code).send({
+        success: false,
+        message: "failed to delete post: " + error.message,
       });
     } else {
       console.error(error.message);
