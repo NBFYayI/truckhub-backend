@@ -51,7 +51,7 @@ router.get("/search", async (req, res) => {
     const order = req.query.order ? req.query.order : "desc";
     const skip = req.query.skip ? req.query.skip : 0;
     const limit = req.query.limit ? req.query.limit : 10;
-    const isComment = req.query.comFlag ? req.query.comFlag : undefined;
+    const isComment = req.query.comFlag;
     const doc = await searchPost(
       author,
       title,
