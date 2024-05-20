@@ -24,9 +24,6 @@ const postSchema = new mongoose.Schema({
 postSchema.index({ title: "text", content: "text" });
 
 const postModel = userDBConection.model("posts", postSchema, "posts");
-postModel.createIndexes((err) => {
-  if (err) console.error("Index creation failed:", err);
-  else console.log("Indexes created");
-});
+postModel.createIndexes();
 
 module.exports = postModel;
