@@ -69,7 +69,8 @@ router.get("/search", async (req, res) => {
     res.status(200).send({
       success: true,
       message: "post loaded",
-      data: doc,
+      data: doc.data,
+      count: doc.count,
     });
   } catch (error) {
     if (error.code) {

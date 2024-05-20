@@ -55,6 +55,7 @@ async function searchPost(
       skip: skip,
       limit: limit,
     };
+    const c = await postService.countPost(filter);
 
     const r = await postService.searchPost(filter, options);
     if (r.length == 0) {
@@ -62,7 +63,10 @@ async function searchPost(
       e.code = "404";
       throw e;
     }
-    return r;
+    const robj = {};
+    robj.data = r;
+    robj.count = c;
+    return robj;
   } catch (error) {
     throw error;
   }
