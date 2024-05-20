@@ -21,6 +21,8 @@ const postSchema = new mongoose.Schema({
   isComment: { type: Boolean, default: false },
 });
 
+postSchema.index({ title: "text", content: "text" });
+
 const postModel = userDBConection.model("posts", postSchema, "posts");
 
 module.exports = postModel;
