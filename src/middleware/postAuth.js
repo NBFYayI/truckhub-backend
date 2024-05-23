@@ -6,7 +6,7 @@ const postVerify = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).send({ message: "Unauthorized" });
   }
 
   try {
@@ -16,25 +16,7 @@ const postVerify = (req, res, next) => {
     }
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
-  }
-};
-
-const authorVerify = (req, res, next) => {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    if (req.body.author !== decoded.username) {
-      throw new Error();
-    }
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(401).send({ message: "Invalid token" });
   }
 };
 
