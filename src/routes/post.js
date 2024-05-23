@@ -10,7 +10,7 @@ const {
   deletePost,
   deleteComment,
 } = require("../controllers/post-control");
-const postVerify = require("./middleware/postAuth");
+const postVerify = require("../middleware/postAuth");
 
 router.get("/", async (req, res) => {
   try {

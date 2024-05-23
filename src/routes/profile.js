@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { getProfile, updateProfile } = require("../controllers/profile-control");
 
-const profileVerify = require("./middleware/profileRoute");
+const profileVerify = require("../middleware/profileRoute");
 router.get("/", async (req, res) => {
   try {
     const username = req.query.username;

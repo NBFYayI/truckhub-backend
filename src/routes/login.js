@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { userInfo, login } = require("../controllers/loginControl");
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = require("../configs/secretKey");
+const { SECRET_KEY } = require("../configs/secretKey");
 
 router.post("/", async (req, res) => {
   try {
@@ -15,6 +15,8 @@ router.post("/", async (req, res) => {
       const token = jwt.sign({ username: username }, SECRET_KEY, {
         expiresIn: "1h",
       });
+      const decoded = jwt.verify(token, SECRET_KEY);
+      console.log(decoded);
       //res.json({ token });
       res.status(200).send({
         success: true,
