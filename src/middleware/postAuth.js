@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = require("../configs/secretKey");
 
-const profileVerify = (req, res, next) => {
+const postVerify = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
@@ -10,7 +10,7 @@ const profileVerify = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    if (req.body.username !== decoded.username) {
+    if (req.body.author !== decoded.username) {
       throw new Error();
     }
     next();
@@ -19,4 +19,4 @@ const profileVerify = (req, res, next) => {
   }
 };
 
-module.exports = profileVerify;
+module.exports = postVerify;

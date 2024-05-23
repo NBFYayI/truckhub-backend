@@ -10,6 +10,7 @@ const {
   deletePost,
   deleteComment,
 } = require("../controllers/post-control");
+const postVerify = require("./middleware/postAuth");
 
 router.get("/", async (req, res) => {
   try {
@@ -88,7 +89,7 @@ router.get("/search", async (req, res) => {
   }
 });
 
-router.post("/new", async (req, res) => {
+router.post("/new", postVerify, async (req, res) => {
   try {
     const author = req.body.author;
     const title = req.body.title;
@@ -118,14 +119,15 @@ router.post("/new", async (req, res) => {
   }
 });
 
-router.post("/update", async (req, res) => {
+router.post("/update", postVerify, async (req, res) => {
   try {
     const id = req.body.id;
+    const author = req.body.author;
     const title = req.body.title;
     const content = req.body.content;
     const tags = req.body.tags;
     const status = req.body.status;
-    const doc = await updatePost(id, title, content, tags, status);
+    const doc = await updatePost(id, author, title, content, tags, status);
     res.status(200).send({
       success: true,
       message: "successfully updated post",
@@ -147,7 +149,7 @@ router.post("/update", async (req, res) => {
   }
 });
 
-router.post("/newcom", async (req, res) => {
+router.post("/newcom", postVerify, async (req, res) => {
   try {
     const author = req.body.author;
     const content = req.body.content;
@@ -176,13 +178,14 @@ router.post("/newcom", async (req, res) => {
   }
 });
 
-router.post("/updatecom", async (req, res) => {
+router.post("/updatecom", postVerify, async (req, res) => {
   try {
     const id = req.body.id;
+    const author = req.body.author;
     const content = req.body.content;
     const status = req.body.status;
     const replyTo = req.body.replyTo;
-    const doc = await updateComment(id, content, replyTo, status);
+    const doc = await updateComment(id, author, content, replyTo, status);
     res.status(200).send({
       success: true,
       message: "successfully updated comment",
@@ -204,10 +207,11 @@ router.post("/updatecom", async (req, res) => {
   }
 });
 
-router.post("/deletecom", async (req, res) => {
+router.post("/deletecom", postVerify, async (req, res) => {
   try {
     const id = req.body.id;
-    const doc = await deleteComment(id);
+    const author = req.body.author;
+    const doc = await deleteComment(id, author);
     res.status(200).send({
       success: true,
       message: "successfully deleted comment",
@@ -229,10 +233,11 @@ router.post("/deletecom", async (req, res) => {
   }
 });
 
-router.post("/deletepost", async (req, res) => {
+router.post("/deletepost", postVerify, async (req, res) => {
   try {
     const id = req.body.id;
-    const doc = await deletePost(id);
+    const author = req.body.author;
+    const doc = await deletePost(id, author);
     res.status(200).send({
       success: true,
       message: "successfully deleted comment",

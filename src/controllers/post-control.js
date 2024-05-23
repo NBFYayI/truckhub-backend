@@ -103,9 +103,9 @@ async function makeNewPost(author, title, content, tags, status) {
   }
 }
 
-async function updatePost(id, title, content, tags, status) {
+async function updatePost(id, author, title, content, tags, status) {
   try {
-    const filter = { _id: id };
+    const filter = { _id: id, author: author };
     const currentDate = new Date();
     const update = {
       title: title ? title : undefined,
@@ -157,9 +157,9 @@ async function makeNewComment(author, content, replyTo, origin, status) {
   }
 }
 
-async function updateComment(id, content, replyTo, status) {
+async function updateComment(id, author, content, replyTo, status) {
   try {
-    const filter = { _id: id };
+    const filter = { _id: id, author: author };
     const currentDate = new Date();
     const update = {
       content: content ? content : undefined,
@@ -180,29 +180,34 @@ async function updateComment(id, content, replyTo, status) {
   }
 }
 
-async function deleteComment(id) {
+async function deleteComment(id, author) {
   try {
-    const r = await postService.deleteCom(id);
-    if (!r) {
+    const post = await postService.getById(id);
+    if (!post || post.author !== author) {
       const e = new Error("comment not found");
       e.code = "404";
       throw e;
     }
+
+    const r = await postService.deleteCom(id);
+
     return r;
   } catch (error) {
     throw error;
   }
 }
 
-async function deletePost(id) {
+async function deletePost(id, author) {
   try {
-    const filter = { origin: id };
-    const r = await postService.deletePost(filter);
-    if (!r) {
+    const post = await postService.getById(id);
+    if (!post || post.author !== author) {
       const e = new Error("post not found");
       e.code = "404";
       throw e;
     }
+    const filter = { origin: id };
+    const r = await postService.deletePost(filter);
+
     return r;
   } catch (error) {
     throw error;

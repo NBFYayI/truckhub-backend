@@ -63,6 +63,15 @@ class PostService {
       throw new Error("error in service: deletePost: " + error.message);
     }
   }
+
+  async getById(id) {
+    try {
+      const doc = await postModel.findById(id);
+      return doc;
+    } catch (error) {
+      throw new Error("error in service: getPostById: " + error.message);
+    }
+  }
 }
 const postService = new PostService();
 module.exports = { postService };
