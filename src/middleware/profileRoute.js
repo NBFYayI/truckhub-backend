@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = require("../configs/secretKey");
+const { SECRET_KEY } = require("../configs/secretKey");
 
 const profileVerify = (req, res, next) => {
   const token = req.cookies.token;
-
+  console.log(token);
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).send({ message: "Unauthorized" });
   }
 
   try {
@@ -15,7 +15,7 @@ const profileVerify = (req, res, next) => {
     }
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(401).send({ message: "Invalid token" });
   }
 };
 
