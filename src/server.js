@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = 8080;
 const cors = require("cors");
+const profileVerify = require("./middleware/profileRoute");
 
 // Import routes
 const healthRoute = require("./routes/health");
@@ -16,7 +17,7 @@ app.use(express.json());
 app.use("/health", healthRoute);
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
-app.use("/profile", profileRoute);
+app.use("/profile", profileVerify, profileRoute);
 app.use("/post", postRoute);
 
 app.listen(port, () => {
