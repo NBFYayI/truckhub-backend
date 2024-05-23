@@ -15,10 +15,11 @@ router.post("/", async (req, res) => {
       const token = jwt.sign({ username: username }, SECRET_KEY, {
         expiresIn: "1h",
       });
-      res.json({ token });
+      //res.json({ token });
       res.status(200).send({
         success: true,
         message: "login success",
+        token: { token },
       });
     } else {
       throw new Error("not sure what happened in login controller");
