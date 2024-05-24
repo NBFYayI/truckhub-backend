@@ -20,6 +20,7 @@ class PostService {
   }
   async searchPost(filter, option) {
     try {
+      console.log(filter);
       const res = await postModel.find(filter, null, option);
       return res;
     } catch (error) {
