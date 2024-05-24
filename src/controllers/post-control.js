@@ -72,7 +72,15 @@ async function searchPost(
   }
 }
 
-async function makeNewPost(author, title, content, tags, status) {
+async function makeNewPost(
+  author,
+  title,
+  content,
+  tags,
+  status,
+  latitude,
+  longitude
+) {
   try {
     if (!author || !title || !content) {
       const e = new Error("Post must contain author, title and content");
@@ -95,6 +103,12 @@ async function makeNewPost(author, title, content, tags, status) {
     if (status) {
       newPost.status = status;
     }
+    if (latitude !== undefined) {
+      newPost.latitude = latitude;
+    }
+    if (longitude !== undefined) {
+      newPost.longitude = longitude;
+    }
 
     const r = await postService.createPost(newPost);
     return r;
@@ -103,7 +117,16 @@ async function makeNewPost(author, title, content, tags, status) {
   }
 }
 
-async function updatePost(id, author, title, content, tags, status) {
+async function updatePost(
+  id,
+  author,
+  title,
+  content,
+  tags,
+  status,
+  latitude,
+  longitude
+) {
   try {
     const filter = { _id: id, author: author };
     const currentDate = new Date();
@@ -111,9 +134,15 @@ async function updatePost(id, author, title, content, tags, status) {
       title: title ? title : undefined,
       content: content ? content : undefined,
       tags: tags ? tags : undefined,
-      status: status ? status : undefined,
       updatedAt: currentDate,
     };
+    if (status) update.status = status;
+    if (latitude !== undefined) {
+      update.latitude = latitude;
+    }
+    if (longitude !== undefined) {
+      update.longitude = longitude;
+    }
 
     const r = await postService.updatePost(filter, update);
     if (!r) {

@@ -96,8 +96,18 @@ router.post("/new", postVerify, async (req, res) => {
     const content = req.body.content;
     const tags = req.body.tags;
     const status = req.body.status;
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
 
-    const doc = await makeNewPost(author, title, content, tags, status);
+    const doc = await makeNewPost(
+      author,
+      title,
+      content,
+      tags,
+      status,
+      latitude,
+      longitude
+    );
     res.status(200).send({
       success: true,
       message: "successfully created post",
@@ -127,7 +137,18 @@ router.post("/update", postVerify, async (req, res) => {
     const content = req.body.content;
     const tags = req.body.tags;
     const status = req.body.status;
-    const doc = await updatePost(id, author, title, content, tags, status);
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
+    const doc = await updatePost(
+      id,
+      author,
+      title,
+      content,
+      tags,
+      status,
+      latitude,
+      longitude
+    );
     res.status(200).send({
       success: true,
       message: "successfully updated post",

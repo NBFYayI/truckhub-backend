@@ -19,6 +19,8 @@ const postSchema = new mongoose.Schema({
   replyTo: String,
   origin: String,
   isComment: { type: Boolean, default: false },
+  latitude: Number,
+  longitude: Number,
 });
 
 postSchema.index({ title: "text", content: "text" });
