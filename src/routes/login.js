@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { userInfo, login } = require("../controllers/loginControl");
+const { userInfo, login } = require("../controllers/login-control");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../configs/secretKey");
 
