@@ -58,6 +58,8 @@ router.get("/search", async (req, res) => {
     const isComment = req.query.comFlag;
     const latitude = req.query.latitude ? req.query.latitude : undefined;
     const longitude = req.query.longitude ? req.query.longitude : undefined;
+    const dist = req.query.dist ? req.query.dist : undefined;
+
     const doc = await searchPost(
       author,
       title,
@@ -70,7 +72,8 @@ router.get("/search", async (req, res) => {
       limit,
       isComment,
       latitude,
-      longitude
+      longitude,
+      dist
     );
     res.status(200).send({
       success: true,

@@ -37,7 +37,8 @@ async function searchPost(
   limit,
   cFlag,
   latitude,
-  longitude
+  longitude,
+  dist
 ) {
   try {
     const filter = {};
@@ -49,23 +50,23 @@ async function searchPost(
     if (tags && tags.length) filter.tags = { $in: tags };
     if (origin) filter.origin = origin;
     if (cFlag !== undefined) filter.isComment = cFlag;
-    if (latitude && longitude)
-      filter.location = {
-        $geoNear: {
-          $geometry: {
-            type: "Point",
-            coordinates: [parseFloat(longitude), parseFloat(latitude)],
-          },
-        },
+    if (latitude && longitude && dist) {
+      const latChange = dist / 69;
+      const longChange = dist / (69 * Math.cos((latitude * Math.PI) / 180));
+      filter.latitude = {
+        $gte: latitude - latChange,
+        $lte: latitude + latChange,
       };
+      filter.longitude = {
+        $gte: longitude - longChange,
+        $lte: longitude + longChange,
+      };
+    }
     const sortCriteria = { isComment: "asc" };
     // sortCriteria[sortfield] = order;
     if (!sortfield) {
       sortCriteria["updatedAt"] = order;
       console.log("man");
-    } else if (sortfield === "location") {
-      console.log("what can i say");
-      sortCriteria["location"] = order;
     }
     const options = {
       sort: sortCriteria,
