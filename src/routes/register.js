@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { register } = require("../controllers/loginControl");
+const { register } = require("../controllers/login-control");
 
 router.post("/", async (req, res) => {
   try {
