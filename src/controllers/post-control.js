@@ -51,15 +51,17 @@ async function searchPost(
     if (origin) filter.origin = origin;
     if (cFlag !== undefined) filter.isComment = cFlag;
     if (latitude && longitude && dist) {
-      const latChange = dist / 69;
-      const longChange = dist / (69 * Math.cos((latitude * Math.PI) / 180));
+      const latChange = parseFloat(dist) / 69;
+      const longChange =
+        parseFloat(dist) /
+        (69 * Math.cos((parseFloat(latitude) * Math.PI) / 180));
       filter.latitude = {
-        $gte: latitude - latChange,
-        $lte: latitude + latChange,
+        $gte: parseFloat(latitude) - latChange,
+        $lte: parseFloat(latitude) + latChange,
       };
       filter.longitude = {
-        $gte: longitude - longChange,
-        $lte: longitude + longChange,
+        $gte: parseFloat(longitude) - longChange,
+        $lte: parseFloat(longitude) + longChange,
       };
     }
     const sortCriteria = { isComment: "asc" };
