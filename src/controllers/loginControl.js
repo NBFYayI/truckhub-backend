@@ -1,4 +1,5 @@
 const { userService } = require("../services/database-services/user");
+const { encryptService } = require("../services/database-services/encrypt");
 
 async function userInfo(username) {
   try {
@@ -21,7 +22,7 @@ async function login(username, password) {
       throw e;
       //throw new Error("username not found");
     }
-    if (password != r[0].password) {
+    if (!encryptService.verifyPassword(password, r[0].password)) {
       const e = new Error("wrong password");
       e.code = "400";
       throw e;
@@ -42,7 +43,8 @@ async function register(username, password) {
       e.code = "400";
       throw e;
     }
-    const r = await userService.createUser(username, password);
+    const encryptedpassword = encryptService.encryptPassword(password);
+    const r = await userService.createUser(username, encryptedpassword);
     const filter = { username: username };
     const update = {
       firstName: "",

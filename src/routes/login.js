@@ -8,12 +8,13 @@ router.post("/", async (req, res) => {
   try {
     const username = req.query.username;
     const password = req.body.password;
+    console.log("1");
     console.log(password);
     console.log(username);
     const loginRes = await login(username, password);
     if (loginRes === 0) {
       const token = jwt.sign({ username: username }, SECRET_KEY, {
-        expiresIn: "1h",
+        expiresIn: "168h",
       });
       const decoded = jwt.verify(token, SECRET_KEY);
       console.log(decoded);
