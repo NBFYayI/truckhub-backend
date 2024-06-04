@@ -3,7 +3,7 @@ const tagModel = require("../../models/tags");
 class TagService {
   async getTags(filter, options) {
     try {
-      const res = await tagModel.find(filter, options);
+      const res = await tagModel.find(filter, null, options);
       return res;
     } catch (error) {
       throw new Error("error in service: getTags" + error.message);
