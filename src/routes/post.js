@@ -289,7 +289,7 @@ router.post("/deletepost", postVerify, async (req, res) => {
   }
 });
 
-router.get("/tag", postVerify, async (req, res) => {
+router.get("/tag", async (req, res) => {
   try {
     const tag = req.query.tag;
     const limit = 10;

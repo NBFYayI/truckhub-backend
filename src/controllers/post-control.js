@@ -129,7 +129,6 @@ async function makeNewPost(
     }
 
     const r = await postService.createPost(newPost);
-    tags = ["mamba", "out"];
     if (tags && tags.length) {
       await tagService.addTags(tags);
     }
