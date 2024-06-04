@@ -9,6 +9,7 @@ const {
   searchPost,
   deletePost,
   deleteComment,
+  getTag,
 } = require("../controllers/post-control");
 const postVerify = require("../middleware/postAuth");
 
@@ -277,6 +278,32 @@ router.post("/deletepost", postVerify, async (req, res) => {
       res.status(error.code).send({
         success: false,
         message: "failed to delete post: " + error.message,
+      });
+    } else {
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+});
+
+router.post("/tag", postVerify, async (req, res) => {
+  try {
+    const tags = req.body.tags;
+    const limit = 10;
+    const doc = await getTag(tags, limit);
+    res.status(200).send({
+      success: true,
+      message: "tags returned",
+      data: doc,
+    });
+  } catch (error) {
+    if (error.code) {
+      res.status(error.code).send({
+        success: false,
+        message: "failed to get tags: " + error.message,
       });
     } else {
       console.error(error.message);
