@@ -289,11 +289,11 @@ router.post("/deletepost", postVerify, async (req, res) => {
   }
 });
 
-router.post("/tag", postVerify, async (req, res) => {
+router.get("/tag", postVerify, async (req, res) => {
   try {
-    const tags = req.body.tags;
+    const tag = req.query.tag;
     const limit = 10;
-    const doc = await getTag(tags, limit);
+    const doc = await getTag(tag, limit);
     res.status(200).send({
       success: true,
       message: "tags returned",
