@@ -1,6 +1,7 @@
 const { search } = require("../routes/health");
 const { postService } = require("../services/database-services/post");
 const { nanoid } = require("nanoid");
+const { tagService } = require("../services/database-services/tag");
 
 async function getPost(id, author, title, content, tags, origin) {
   try {
@@ -68,14 +69,12 @@ async function searchPost(
     // sortCriteria[sortfield] = order;
     if (!sortfield) {
       sortCriteria["updatedAt"] = order;
-      console.log("man");
     }
     const options = {
       sort: sortCriteria,
       skip: skip,
       limit: limit,
     };
-    const c = await postService.countPost(filter);
 
     const r = await postService.searchPost(filter, options);
     if (r.length == 0) {
@@ -85,7 +84,6 @@ async function searchPost(
     }
     const robj = {};
     robj.data = r;
-    robj.count = c;
     return robj;
   } catch (error) {
     throw error;
@@ -131,6 +129,10 @@ async function makeNewPost(
     }
 
     const r = await postService.createPost(newPost);
+    if (tags && tags.length) {
+      await tagService.addTags(tags);
+    }
+
     return r;
   } catch (error) {
     throw error;
@@ -170,6 +172,8 @@ async function updatePost(
       e.code = "404";
       throw e;
     }
+    if (r.tags && r.tags.length) await tagService.subTags(r.tags);
+    if (tags && tags.length) await tagService.addTags(tags);
     return r;
   } catch (error) {
     throw error;
@@ -254,6 +258,7 @@ async function deletePost(id, author) {
       e.code = "404";
       throw e;
     }
+    if (post.tags && post.tags.length) await tagService.subTags(post.tags);
     const filter = { origin: id };
     const r = await postService.deletePost(filter);
 
@@ -262,6 +267,30 @@ async function deletePost(id, author) {
     throw error;
   }
 }
+
+async function getTag(tag, limit) {
+  try {
+    const filter = {};
+
+    if (tag && tag.length) filter.tagname = { $regex: tag, $options: "i" };
+    const sortCriteria = { count: "desc" };
+
+    const options = {
+      sort: sortCriteria,
+      limit: limit,
+    };
+    const r = await tagService.getTags(filter, options);
+    if (r.length == 0) {
+      const e = new Error("no tag found");
+      e.code = "404";
+      throw e;
+    }
+    return r;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   getPost,
   makeNewPost,
@@ -271,4 +300,5 @@ module.exports = {
   searchPost,
   deleteComment,
   deletePost,
+  getTag,
 };
