@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const { register } = require("../controllers/user-control");
-const nodemailer = require("nodemailer"); // Import nodemailer
 const Mailjet = require("node-mailjet");
 router.post("/", async (req, res) => {
   try {
