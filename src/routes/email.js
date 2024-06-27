@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const Mailjet = require("node-mailjet");
 const { emailVerify, sendEmail } = require("../controllers/user-control");
 router.post("/", async (req, res) => {
   try {

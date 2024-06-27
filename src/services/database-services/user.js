@@ -3,7 +3,7 @@ const userModel = require("../../models/user");
 class UserService {
   async getUser(username) {
     try {
-      const res = await userModel.find({
+      const res = await userModel.findOne({
         username: username,
       });
       return res;
@@ -39,7 +39,7 @@ class UserService {
   async getUserProfile(username) {
     try {
       const res = await userModel
-        .find({
+        .findOne({
           username: username,
         })
         .select({ password: 0, email: 0, otp: 0, verified: 0 });

@@ -7,6 +7,14 @@ router.post("/", async (req, res) => {
     //console.log(req);
     const password = req.body.password;
     const email = req.body.email;
+    if (!username || !password || !email) {
+      res.status(400).send({
+        success: false,
+        message: "must contain username, password, and email",
+
+        //res.status(200).send("Verification email sent");
+      });
+    }
     const nickname = req.body.nickname;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
