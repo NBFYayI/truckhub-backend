@@ -1,5 +1,4 @@
 const userModel = require("../../models/user");
-//const profileModel = require("../../models/profile");
 
 class UserService {
   async getUser(username) {
@@ -39,7 +38,7 @@ class UserService {
 
   async getUserProfile(username) {
     try {
-      const res = await profileModel
+      const res = await userModel
         .find({
           username: username,
         })
@@ -52,7 +51,18 @@ class UserService {
 
   async updateUserProfile(filter, update) {
     try {
-      const doc = await profileModel.findOneAndUpdate(filter, update, {
+      const doc = await userModel.findOneAndUpdate(filter, update, {
+        new: true,
+      });
+      return doc;
+    } catch (error) {
+      throw new Error("error in updateUserProfile: " + error.message);
+    }
+  }
+
+  async updateUser(filter, update) {
+    try {
+      const doc = await userModel.findOneAndUpdate(filter, update, {
         new: true,
       });
       return doc;

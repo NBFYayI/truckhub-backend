@@ -1,5 +1,7 @@
 const { userService } = require("../services/database-services/user");
 const { encryptService } = require("../services/database-services/encrypt");
+const Mailjet = require("node-mailjet");
+const { mailCon } = require("../middleware/mail");
 
 async function userInfo(username) {
   try {
@@ -55,6 +57,7 @@ async function register(
       throw e;
     }
     const encryptedpassword = encryptService.encryptPassword(password);
+
     const newUser = {
       username: username,
       password: encryptedpassword,
@@ -111,4 +114,108 @@ async function updateProfile(
   }
 }
 
-module.exports = { userInfo, login, register, getProfile, updateProfile };
+async function sendEmail(username) {
+  try {
+    const r = await userService.getUser(username);
+    //console.log(r);
+    if (r.length == 0) {
+      //return 1;
+      const e = new Error("username not found");
+      e.code = "404";
+      throw e;
+      //throw new Error("username not found");
+    }
+    if (r.verified === true) {
+      const e = new Error("email already verified");
+      e.code = 400;
+      throw e;
+    }
+    const email = r.email;
+    const code = Math.floor(100000 + Math.random() * 900000);
+    const date = new Date();
+    const otp = { code: code, timestamp: date };
+    const filter = { username: username };
+
+    const update = { otp: otp };
+    const up = await userService.updateUser(filter, update);
+    const request = mailCon.post("send", { version: "v3.1" }).request({
+      Messages: [
+        {
+          From: {
+            Email: "truckhub1@gmail.com",
+            Name: "Truckhub Official",
+          },
+          To: [
+            {
+              Email: "nbfyayi@gmail.com",
+              Name: "You",
+            },
+          ],
+          Subject: "dog",
+          TextPart:
+            "hey dog your fking code is " +
+            code +
+            ". The code will expire in 10 minutes.",
+        },
+      ],
+    });
+    request
+      .then((result) => {
+        console.log(result.body);
+      })
+      .catch((err) => {
+        console.log(err.statusCode);
+        throw err;
+      });
+    return 0;
+  } catch (error) {
+    throw error;
+    //throw new Error(error.message);
+  }
+}
+async function emailVerify(username, code, date) {
+  try {
+    const r = await userService.getUser(username);
+    //console.log(r);
+    if (r.length == 0) {
+      //return 1;
+      const e = new Error("username not found");
+      e.code = 404;
+      throw e;
+      //throw new Error("username not found");
+    }
+    if (r.verified === true) {
+      const e = new Error("email already verified");
+      e.code = 400;
+      throw e;
+    }
+    if (r.otp.code !== code) {
+      const e = new Error("incorrect otp");
+      e.code = 401;
+      throw e;
+    }
+    const rdate = r.otp.timestamp;
+    if (date.getTime() - rdate.getTime() >= 10 * 60 * 1000) {
+      const e = new Error("otp expired");
+      e.code = 403;
+      throw e;
+    }
+    const filter = { username: username };
+    const update = { verified: true };
+    const up = await userService.updateUser(filter, update);
+    return 0;
+  } catch (error) {
+    throw error;
+    //throw new Error(error.message);
+  }
+}
+
+module.exports = {
+  userInfo,
+  login,
+  register,
+  getProfile,
+  updateProfile,
+  sendEmail,
+  emailVerify,
+};
