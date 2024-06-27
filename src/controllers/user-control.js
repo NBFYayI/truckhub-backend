@@ -61,7 +61,7 @@ async function register(
       lastname: lastname,
       occupation: occupation,
     };
-    const r = await userService.createUser(doc);
+    const r = await userService.createUser(newUser);
 
     //console.log(r);
     return pf;
