@@ -17,7 +17,7 @@ async function login(username, password) {
   try {
     const r = await userService.getUser(username);
     //console.log(r);
-    if (r.length == 0) {
+    if (!r) {
       //return 1;
       const e = new Error("username not found");
       e.code = "404";
@@ -80,7 +80,7 @@ async function register(
 async function getProfile(username) {
   try {
     const r = await userService.getUserProfile(username);
-    if (r.length == 0) {
+    if (!r) {
       const e = new Error("username not found");
       e.code = "404";
       throw e;
@@ -118,7 +118,7 @@ async function sendEmail(username) {
   try {
     const r = await userService.getUser(username);
     //console.log(r);
-    if (r.length == 0) {
+    if (!r) {
       //return 1;
       const e = new Error("username not found");
       e.code = "404";
@@ -177,7 +177,7 @@ async function emailVerify(username, code) {
   try {
     const r = await userService.getUser(username);
     //console.log(r);
-    if (r.length == 0) {
+    if (!r) {
       //return 1;
       const e = new Error("username not found");
       e.code = 404;

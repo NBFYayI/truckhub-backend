@@ -11,8 +11,6 @@ router.post("/", async (req, res) => {
     res.status(200).send({
       success: true,
       message: "successfully verified",
-      data: reg,
-      //res.status(200).send("Verification email sent");
     });
   } catch (error) {
     if (error.code) {
