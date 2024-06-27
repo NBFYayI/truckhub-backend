@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const userModel = userDBConection.model("login", loginSchema, "login");
+const userModel = userDBConection.model("user", userSchema, "user");
 // const loginModel = mongoose.model("login", loginSchema, "login");
 
 module.exports = userModel;
