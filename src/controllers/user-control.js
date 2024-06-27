@@ -64,7 +64,7 @@ async function register(
     const r = await userService.createUser(newUser);
 
     //console.log(r);
-    return pf;
+    return r;
   } catch (error) {
     throw error;
     //throw new Error("error in createUser: " + error.message);
