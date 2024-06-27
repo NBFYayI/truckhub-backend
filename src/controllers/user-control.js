@@ -28,6 +28,9 @@ async function login(username, password) {
       throw e;
       //throw new Error("wrong password");
     }
+    if (r.verified === false) {
+      return 1;
+    }
     return 0;
   } catch (error) {
     throw error;
