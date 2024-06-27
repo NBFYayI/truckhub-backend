@@ -173,7 +173,7 @@ async function sendEmail(username) {
     //throw new Error(error.message);
   }
 }
-async function emailVerify(username, code, date) {
+async function emailVerify(username, code) {
   try {
     const r = await userService.getUser(username);
     //console.log(r);
@@ -195,6 +195,7 @@ async function emailVerify(username, code, date) {
       throw e;
     }
     const rdate = r.otp.timestamp;
+    const date = new Date();
     if (date.getTime() - rdate.getTime() >= 10 * 60 * 1000) {
       const e = new Error("otp expired");
       e.code = 403;

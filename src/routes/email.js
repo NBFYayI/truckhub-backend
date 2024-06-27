@@ -7,8 +7,7 @@ router.post("/", async (req, res) => {
     const username = req.body.username;
     //console.log(req);
     const code = req.body.code;
-    const timestamp = req.body.timestamp;
-    const reg = await emailVerify(username, code, timestamp);
+    const reg = await emailVerify(username, code);
 
     res.status(200).send({
       success: true,
