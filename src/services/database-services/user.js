@@ -1,5 +1,5 @@
-const userModel = require("../../models/login");
-const profileModel = require("../../models/profile");
+const userModel = require("../../models/user");
+//const profileModel = require("../../models/profile");
 
 class UserService {
   async getUser(username) {
@@ -29,13 +29,8 @@ class UserService {
     }
   }
 
-  async createUser(username, password) {
+  async createUser(doc) {
     try {
-      const doc = {
-        username: username,
-        password: password,
-        //_id: new ObjectID(),
-      };
       await userModel.create(doc);
     } catch (error) {
       throw new Error("error in createUser: " + error.message);
@@ -44,9 +39,11 @@ class UserService {
 
   async getUserProfile(username) {
     try {
-      const res = await profileModel.find({
-        username: username,
-      });
+      const res = await profileModel
+        .find({
+          username: username,
+        })
+        .select({ password: 0, email: 0, otp: 0, verified: 0 });
       return res;
     } catch (error) {
       throw new Error("error in getUserProfile: " + error.message);
@@ -57,7 +54,6 @@ class UserService {
     try {
       const doc = await profileModel.findOneAndUpdate(filter, update, {
         new: true,
-        upsert: true,
       });
       return doc;
     } catch (error) {

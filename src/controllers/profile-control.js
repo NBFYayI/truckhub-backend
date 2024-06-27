@@ -15,14 +15,20 @@ async function getProfile(username) {
   }
 }
 
-async function updateProfile(username, firstName, lastName, occupation, email) {
+async function updateProfile(
+  username,
+  firstName,
+  lastName,
+  occupation,
+  nickname
+) {
   try {
     const filter = { username: username };
     const update = {
       firstName: firstName,
       lastName: lastName,
       occupation: occupation,
-      email: email,
+      nickname: nickname,
     };
     const r = await userService.updateUserProfile(filter, update);
     return r;
