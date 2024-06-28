@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getProfile, updateProfile } = require("../controllers/profile-control");
+const { getProfile, updateProfile } = require("../controllers/user-control");
 
 const profileVerify = require("../middleware/profileRoute");
 router.get("/", async (req, res) => {
@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     res.status(200).send({
       success: true,
       message: "profile loaded",
-      data: doc[0],
+      data: doc,
     });
   } catch (error) {
     if (error.code) {
@@ -36,7 +36,7 @@ router.post("/", profileVerify, async (req, res) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const occupation = req.body.occupation;
-    const email = req.body.email;
+    const nickname = req.body.nickname;
     console.log(username);
     // const info = await userInfo(username);
     // console.log(info);
@@ -45,7 +45,7 @@ router.post("/", profileVerify, async (req, res) => {
       firstName,
       lastName,
       occupation,
-      email
+      nickname
     );
 
     res.status(200).send({

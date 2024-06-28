@@ -95,9 +95,9 @@ async function getProfile(username) {
 async function updateProfile(
   username,
   firstName,
-  nickname,
   lastName,
-  occupation
+  occupation,
+  nickname
 ) {
   try {
     const filter = { username: username };
