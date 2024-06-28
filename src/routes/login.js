@@ -17,8 +17,7 @@ router.post("/", async (req, res) => {
         success: false,
         message: "email not verified",
       });
-    }
-    if (loginRes === 0) {
+    } else if (loginRes === 0) {
       const token = jwt.sign({ username: username }, SECRET_KEY, {
         expiresIn: "168h",
       });
