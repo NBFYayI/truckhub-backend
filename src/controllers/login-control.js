@@ -22,7 +22,7 @@ async function login(username, password) {
       throw e;
       //throw new Error("username not found");
     }
-    if (!encryptService.verifyPassword(password, r[0].password)) {
+    if (!encryptService.verifyPassword(password, r.password)) {
       const e = new Error("wrong password");
       e.code = "400";
       throw e;
