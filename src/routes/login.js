@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
     console.log(password);
     console.log(username);
     const loginRes = await login(username, password);
-    if (lofinRes === 1) {
+    if (loginRes === 1) {
       res.status(403).send({
         success: false,
         message: "email not verified",
