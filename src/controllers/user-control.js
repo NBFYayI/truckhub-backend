@@ -147,13 +147,15 @@ async function sendEmail(username) {
           },
           To: [
             {
-              Email: "nbfyayi@gmail.com",
+              Email: email,
               Name: "You",
             },
           ],
-          Subject: "dog",
+          Subject: "truckhub verify",
           TextPart:
-            "hey dog your fking code is " +
+            "Hi " +
+            username +
+            ", your verification code is " +
             code +
             ". The code will expire in 10 minutes.",
         },
