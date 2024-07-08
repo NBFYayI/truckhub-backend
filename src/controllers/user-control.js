@@ -1,7 +1,7 @@
 const { userService } = require("../services/database-services/user");
 const { encryptService } = require("../services/database-services/encrypt");
-const Mailjet = require("node-mailjet");
-const { mailCon } = require("../middleware/mail");
+
+const { mailService } = require("../services/api-services/mail");
 
 async function userInfo(username) {
   try {
@@ -138,37 +138,7 @@ async function sendEmail(username) {
 
     const update = { otp: otp };
     const up = await userService.updateUser(filter, update);
-    const request = mailCon.post("send", { version: "v3.1" }).request({
-      Messages: [
-        {
-          From: {
-            Email: "truckhub1@gmail.com",
-            Name: "Truckhub Official",
-          },
-          To: [
-            {
-              Email: email,
-              Name: "You",
-            },
-          ],
-          Subject: "truckhub verify",
-          TextPart:
-            "Hi " +
-            username +
-            ", your verification code is " +
-            code +
-            ". The code will expire in 10 minutes.",
-        },
-      ],
-    });
-    request
-      .then((result) => {
-        console.log(result.body);
-      })
-      .catch((err) => {
-        console.log(err.statusCode);
-        throw err;
-      });
+    mailService.sendEmail(username, email, code);
     return 0;
   } catch (error) {
     throw error;
