@@ -11,6 +11,7 @@ const registerRoute = require("./routes/register");
 const profileRoute = require("./routes/profile");
 const postRoute = require("./routes/post");
 const emailRoute = require("./routes/email");
+const messageRoute = require("./routes/message");
 
 const corsOptions = {
   origin: "http://localhost:3000", // The frontend's origin
@@ -27,6 +28,7 @@ app.use("/register", registerRoute);
 app.use("/profile", profileRoute);
 app.use("/post", postRoute);
 app.use("/verify", emailRoute);
+app.use("/message", messageRoute);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
