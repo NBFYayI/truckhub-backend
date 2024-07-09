@@ -16,8 +16,8 @@ router.post("/", async (req, res) => {
       });
     }
     const nickname = req.body.nickname;
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
+    const firstname = req.body.firstName;
+    const lastname = req.body.lastName;
     const occupation = req.body.occupation;
     console.log(username);
     console.log(password);

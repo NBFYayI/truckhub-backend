@@ -63,8 +63,8 @@ async function register(
       password: encryptedpassword,
       email: email,
       nickname: nickname,
-      firstname: firstname,
-      lastname: lastname,
+      firstName: firstname,
+      lastName: lastname,
       occupation: occupation,
     };
     const r = await userService.createUser(newUser);
