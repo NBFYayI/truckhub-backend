@@ -3,6 +3,11 @@ const app = express();
 const port = 8080;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const http = require("http");
+const server = http.createServer(app);
+
+const { Server } = require("socket.io");
+const io = new Server(server);
 
 // Import routes
 const healthRoute = require("./routes/health");
@@ -30,6 +35,23 @@ app.use("/post", postRoute);
 app.use("/verify", emailRoute);
 app.use("/message", messageRoute);
 
-app.listen(port, () => {
+io.on("connection", (socket) => {
+  console.log("a user connected");
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+  socket.on("joinRoom", (username) => {
+    socket.join(username);
+    console.log(`${username}joined room`);
+  });
+  socket.on("sendMessage", (message) => {
+    console.log(message);
+
+    io.emit("message", message);
+  });
+});
+
+server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
