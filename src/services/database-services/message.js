@@ -13,7 +13,20 @@ class MessageService {
       const res = await messageModel.find(filter, null, option);
       return res;
     } catch (error) {
-      throw new Error("error in service: searchPost; " + error.message);
+      throw new Error("error in service: searchMessage; " + error.message);
+    }
+  }
+  async readMessages(ids) {
+    try {
+      const result = await messageModel.updateMany(
+        { _id: { $in: ids } },
+        { $set: { read: true } }
+      );
+
+      console.log(`${result.nModified} messages updated`);
+      return result;
+    } catch (error) {
+      throw new Error("error in service: readMessage; " + error.message);
     }
   }
 

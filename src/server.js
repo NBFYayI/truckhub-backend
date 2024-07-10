@@ -17,6 +17,14 @@ const profileRoute = require("./routes/profile");
 const postRoute = require("./routes/post");
 const emailRoute = require("./routes/email");
 const messageRoute = require("./routes/message");
+const socketVerify = require("./middleware/socketAuth");
+
+//Import socket control
+const {
+  getAllMessages,
+  setRead,
+  sendMessage,
+} = require("./controllers/socket-control");
 
 const corsOptions = {
   origin: "http://localhost:3000", // The frontend's origin
@@ -35,20 +43,60 @@ app.use("/post", postRoute);
 app.use("/verify", emailRoute);
 app.use("/message", messageRoute);
 
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  const username = socket.handshake.auth.username;
+  if (!token || !username) {
+    return next(new Error("Authentication error"));
+  }
+  if (!socketVerify(username, token)) {
+    return next(new Error("Authentication error"));
+  }
+
+  next();
+});
 io.on("connection", (socket) => {
   console.log("a user connected");
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    console.log("a user disconnected");
   });
-  socket.on("joinRoom", (username) => {
-    socket.join(username);
-    console.log(`${username}joined room`);
+  socket.on("login", async (username) => {
+    try {
+      socket.join(username);
+      console.log(`${username}joined room`);
+      const msgs = await getAllMessages(username);
+      socket.emit("allMessages", msgs);
+    } catch (error) {
+      socket.emit("myError", error.message);
+    }
   });
-  socket.on("sendMessage", (message) => {
-    console.log(message);
-
-    io.emit("message", message);
+  socket.on("readMessage", async (ids) => {
+    try {
+      console.log(data);
+      if (!ids || ids.length === 0) {
+        throw new Error("ids required");
+      }
+      const result = await setRead(ids);
+    } catch (error) {
+      socket.emit("myError", error.message);
+    }
+  });
+  socket.on("sendMessage", async (message) => {
+    try {
+      console.log(message);
+      if (!message.from || !message.to || !message.content) {
+        throw new Error("invalid message");
+      }
+      const result = await sendMessage(
+        message.from,
+        message.to,
+        message.content
+      );
+      io.to(message.to).emit("sendMessage", message);
+    } catch (error) {
+      socket.emit("myError", error.message);
+    }
   });
 });
 
