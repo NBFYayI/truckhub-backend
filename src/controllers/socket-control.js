@@ -93,9 +93,8 @@ async function getConvs(user1) {
 
 async function setRead(msgids) {
   try {
-    const objectIdArray = msgids.map((id) => mongoose.Types.ObjectId(id));
-    const readmsgs = await messageService.readMessages(objectIdArray);
-    return readmsgs.nModified;
+    const readmsgs = await messageService.readMessages(msgids);
+    return readmsgs.modifiedCount;
   } catch (error) {
     throw error;
   }

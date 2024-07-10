@@ -9,7 +9,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000/", // The frontend's origin
+    origin: "http://localhost:3000", // The frontend's origin
     methods: ["GET", "POST"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -80,7 +80,7 @@ io.on("connection", (socket) => {
   });
   socket.on("readMessage", async (ids) => {
     try {
-      console.log(data);
+      console.log(ids);
       if (!ids || ids.length === 0) {
         throw new Error("ids required");
       }

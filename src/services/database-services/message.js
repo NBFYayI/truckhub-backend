@@ -23,7 +23,7 @@ class MessageService {
         { $set: { read: true } }
       );
 
-      console.log(`${result.nModified} messages updated`);
+      console.log(`${result.modifiedCount} messages updated`);
       return result;
     } catch (error) {
       throw new Error("error in service: readMessage; " + error.message);

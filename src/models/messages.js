@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
 const { userDBConection } = require("../connections/mongodb");
+const { nanoid } = require("nanoid");
 
 const messageSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: () => nanoid(),
+  },
   from: {
     type: String,
     required: true, // This field is required
