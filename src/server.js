@@ -100,7 +100,8 @@ io.on("connection", (socket) => {
         message.to,
         message.content
       );
-      io.to(message.to).emit("sendMessage", message);
+      socket.emit("sendMessage", result);
+      io.to(message.to).emit("sendMessage", result);
     } catch (error) {
       socket.emit("myError", error.message);
     }
