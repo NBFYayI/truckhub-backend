@@ -70,6 +70,17 @@ class UserService {
       throw new Error("error in updateUserProfile: " + error.message);
     }
   }
+
+  async searchUser(filter, options) {
+    try {
+      const doc = await userModel
+        .find(filter, options)
+        .select({ password: 0, email: 0, otp: 0, verified: 0 });
+      return doc;
+    } catch (error) {
+      throw new Error("error in searchUser: " + error.message);
+    }
+  }
 }
 
 const userService = new UserService();

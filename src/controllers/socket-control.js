@@ -99,10 +99,28 @@ async function setRead(msgids) {
     throw error;
   }
 }
+
+async function userSearch(keyword) {
+  try {
+    const filter = {};
+    const options = {};
+    if (keyword.trim()) {
+      filter.username = new RegExp("^" + keyword.trim(), "i");
+    } else {
+      throw new Error("keyword cannot be empty");
+    }
+
+    const users = await userService.searchUser(filter, options);
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
 module.exports = {
   sendMessage,
   getAllMessages,
   getMessageBetween,
   getConvs,
   setRead,
+  userSearch,
 };

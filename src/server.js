@@ -31,6 +31,7 @@ const {
   getAllMessages,
   setRead,
   sendMessage,
+  userSearch,
 } = require("./controllers/socket-control");
 
 const corsOptions = {
@@ -102,6 +103,14 @@ io.on("connection", (socket) => {
       );
       socket.emit("sendMessage", result);
       io.to(message.to).emit("sendMessage", result);
+    } catch (error) {
+      socket.emit("myError", error.message);
+    }
+  });
+  socket.on("userSearch", async (keyword) => {
+    try {
+      const result = await userSearch(keyword);
+      socket.emit("userSearch", result);
     } catch (error) {
       socket.emit("myError", error.message);
     }
