@@ -2,7 +2,8 @@ const messageModel = require("../../models/messages");
 class MessageService {
   async createMessage(doc) {
     try {
-      await messageModel.create(doc);
+      const r = await messageModel.create(doc);
+      return r;
     } catch (error) {
       throw new Error("error in createMessage: " + error.message);
     }

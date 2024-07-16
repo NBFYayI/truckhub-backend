@@ -16,6 +16,7 @@ async function sendMessage(src, dest, content) {
       throw e;
     }
     const date = new Date();
+
     const message = {
       from: src,
       to: dest,
@@ -102,6 +103,7 @@ async function setRead(msgids) {
 
 async function userSearch(keyword) {
   try {
+    console.log(keyword + " fuckyou");
     const filter = {};
     const options = {};
     if (keyword.trim()) {
