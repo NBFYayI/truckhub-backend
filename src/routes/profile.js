@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { getProfile, updateProfile } = require("../controllers/user-control");
+const {
+  getProfile,
+  updateProfile,
+  changePassword,
+  changeEmail,
+} = require("../controllers/user-control");
 
 const profileVerify = require("../middleware/profileRoute");
 router.get("/", async (req, res) => {
@@ -54,11 +59,74 @@ router.post("/", profileVerify, async (req, res) => {
       data: doc,
     });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send({
-      success: false,
-      message: error.message,
+    if (error.code) {
+      res.status(error.code).send({
+        success: false,
+        message: "failed to update profile: " + error.message,
+      });
+    } else {
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+});
+
+router.post("/password", profileVerify, async (req, res) => {
+  try {
+    const username = req.body.username;
+    const oldPass = req.body.oldPass;
+    const newPass = req.body.newPass;
+    const doc = await changePassword(username, oldPass, newPass);
+
+    res.status(200).send({
+      success: true,
+      message: "password change success",
+      data: doc,
     });
+  } catch (error) {
+    if (error.code) {
+      res.status(error.code).send({
+        success: false,
+        message: "failed to change password: " + error.message,
+      });
+    } else {
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+});
+
+router.post("/email", profileVerify, async (req, res) => {
+  try {
+    const username = req.body.username;
+
+    const email = req.body.email;
+    const doc = await changeEmail(username, email);
+
+    res.status(200).send({
+      success: true,
+      message: "email change success",
+      data: doc,
+    });
+  } catch (error) {
+    if (error.code) {
+      res.status(error.code).send({
+        success: false,
+        message: "failed to change email: " + error.message,
+      });
+    } else {
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
   }
 });
 

@@ -77,6 +77,64 @@ async function register(
   }
 }
 
+async function changePassword(username, oldPass, newPass) {
+  try {
+    const usr = await userService.getUser(username);
+    //console.log(r);
+    if (!usr) {
+      //return 1;
+      const e = new Error("username not found");
+      e.code = "404";
+      throw e;
+      //throw new Error("username not found");
+    }
+    if (!encryptService.verifyPassword(oldPass, usr.password)) {
+      const e = new Error("wrong password");
+      e.code = "400";
+      throw e;
+      //throw new Error("wrong password");
+    }
+    const encryptedpassword = encryptService.encryptPassword(newPass);
+    const filter = { username: username };
+    const update = {
+      password: encryptedpassword,
+    };
+    const r = await userService.updateUser(filter, update);
+
+    //console.log(r);
+    return r.username;
+  } catch (error) {
+    throw error;
+    //throw new Error("error in createUser: " + error.message);
+  }
+}
+async function changeEmail(username, email) {
+  try {
+    const usr = await userService.getUser(username);
+    //console.log(r);
+    if (!usr) {
+      //return 1;
+      const e = new Error("username not found");
+      e.code = "404";
+      throw e;
+      //throw new Error("username not found");
+    }
+
+    const filter = { username: username };
+    const update = {
+      email: email,
+      verified: false,
+    };
+    const r = await userService.updateUser(filter, update);
+
+    //console.log(r);
+    return r.username;
+  } catch (error) {
+    throw error;
+    //throw new Error("error in createUser: " + error.message);
+  }
+}
+
 async function getProfile(username) {
   try {
     const r = await userService.getUserProfile(username);
@@ -187,6 +245,8 @@ module.exports = {
   userInfo,
   login,
   register,
+  changePassword,
+  changeEmail,
   getProfile,
   updateProfile,
   sendEmail,
