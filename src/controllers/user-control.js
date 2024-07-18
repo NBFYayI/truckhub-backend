@@ -110,7 +110,7 @@ async function changePassword(username, oldPass, newPass) {
 }
 async function changeEmail(username, email) {
   try {
-    const usr = await userService.getUser(username);
+    const usr = await userService.getUserEmail(username);
     //console.log(r);
     if (!usr) {
       //return 1;
@@ -118,6 +118,11 @@ async function changeEmail(username, email) {
       e.code = "404";
       throw e;
       //throw new Error("username not found");
+    }
+    if (usr.email === email) {
+      const e = new Error("email cannot be the same");
+      e.code = "400";
+      throw e;
     }
 
     const filter = { username: username };
