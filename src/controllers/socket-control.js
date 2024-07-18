@@ -42,11 +42,11 @@ async function getAllMessages(user1) {
     };
 
     const docs = await messageService.searchMessage(filter, options);
-    if (docs.length === 0) {
-      const e = new Error("No messages found for user:" + user1);
-      e.code = 404;
-      throw e;
-    }
+    // if (docs.length === 0) {
+    //   const e = new Error("No messages found for user:" + user1);
+    //   e.code = 404;
+    //   throw e;
+    // }
 
     return docs;
   } catch (error) {
