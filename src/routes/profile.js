@@ -5,6 +5,7 @@ const {
   updateProfile,
   changePassword,
   changeEmail,
+  getEmail,
 } = require("../controllers/user-control");
 
 const profileVerify = require("../middleware/profileRoute");
@@ -23,6 +24,32 @@ router.get("/", async (req, res) => {
       res.status(error.code).send({
         success: false,
         message: "cannot get profile: " + error.message,
+      });
+    } else {
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+});
+
+router.post("/account", profileVerify, async (req, res) => {
+  try {
+    const username = req.body.username;
+
+    const doc = await getEmail(username);
+    res.status(200).send({
+      success: true,
+      message: "success",
+      data: doc,
+    });
+  } catch (error) {
+    if (error.code) {
+      res.status(error.code).send({
+        success: false,
+        message: "failed to get info: " + error.message,
       });
     } else {
       console.error(error.message);

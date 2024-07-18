@@ -49,6 +49,19 @@ class UserService {
     }
   }
 
+  async getUserEmail(username) {
+    try {
+      const res = await userModel
+        .findOne({
+          username: username,
+        })
+        .select({ email: 1 });
+      return res;
+    } catch (error) {
+      throw new Error("error in getUserEmail: " + error.message);
+    }
+  }
+
   async updateUserProfile(filter, update) {
     try {
       const doc = await userModel.findOneAndUpdate(filter, update, {

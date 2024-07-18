@@ -150,6 +150,21 @@ async function getProfile(username) {
   }
 }
 
+async function getEmail(username) {
+  try {
+    const r = await userService.getUserEmail(username);
+    if (!r) {
+      const e = new Error("username not found");
+      e.code = "404";
+      throw e;
+    }
+    return r;
+  } catch (error) {
+    throw error;
+    //throw new Error("error in getProfile: " + error.message);
+  }
+}
+
 async function updateProfile(
   username,
   firstName,
@@ -248,6 +263,7 @@ module.exports = {
   changePassword,
   changeEmail,
   getProfile,
+  getEmail,
   updateProfile,
   sendEmail,
   emailVerify,
