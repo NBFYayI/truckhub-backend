@@ -9,7 +9,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // The frontend's origin
+    origin: "https://dc9mte7gy226s.cloudfront.net", // The frontend's origin
     methods: ["GET", "POST"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -40,7 +40,7 @@ const corsOptions = {
 };
 
 // Routes
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/health", healthRoute);

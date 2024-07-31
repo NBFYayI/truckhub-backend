@@ -216,7 +216,7 @@ async function sendEmail(username) {
 
     const update = { otp: otp };
     const up = await userService.updateUser(filter, update);
-    mailService.sendEmail(username, email, code);
+    await mailService.sendEmail(username, email, code);
     return 0;
   } catch (error) {
     throw error;

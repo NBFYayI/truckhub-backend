@@ -2,9 +2,10 @@ const nodemailer = require("nodemailer");
 const { transporter } = require("../../connections/mailer");
 
 class MailService {
-  sendEmail(username, email, code) {
+  async sendEmail(username, email, code) {
     try {
-      transporter.sendMail({
+      console.log(email);
+      await transporter.sendMail({
         to: email,
         subject: "Truckhub Verify",
         text:
