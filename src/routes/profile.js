@@ -69,7 +69,8 @@ router.post("/", profileVerify, async (req, res) => {
     const lastName = req.body.lastName;
     const occupation = req.body.occupation;
     const nickname = req.body.nickname;
-    console.log(username);
+    const avatar = req.body.avatar;
+    console.log(avatar);
     // const info = await userInfo(username);
     // console.log(info);
     const doc = await updateProfile(
