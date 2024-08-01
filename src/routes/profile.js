@@ -7,6 +7,8 @@ const {
   changeEmail,
   getEmail,
 } = require("../controllers/user-control");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 const profileVerify = require("../middleware/profileRoute");
 router.get("/", async (req, res) => {
@@ -61,18 +63,14 @@ router.post("/account", profileVerify, async (req, res) => {
   }
 });
 
-router.post("/", profileVerify, async (req, res) => {
+router.post("/", upload.single("avatar"), async (req, res) => {
   try {
-    const username = req.body.username;
-    //console.log(req);
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const occupation = req.body.occupation;
-    const nickname = req.body.nickname;
-    const avatar = req.body.avatar;
+    const { username, firstName, lastName, nickname, occupation } = req.params;
+    const avatar = req.body;
     console.log(avatar);
     // const info = await userInfo(username);
     // console.log(info);
+
     const doc = await updateProfile(
       username,
       firstName,
