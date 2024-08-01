@@ -3,7 +3,6 @@ const { SECRET_KEY } = require("../configs/secretKey");
 
 const profileVerify = (req, res, next) => {
   const token = req.headers.jwt;
-  console.log(token + "profileRoute-6");
   if (!token) {
     return res.status(401).send({ message: "Unauthorized Profile" });
   }
