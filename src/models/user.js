@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
     code: { type: String },
     timestamp: { type: Date },
   },
+  avatarURL: String,
 });
 
 const userModel = userDBConection.model("user", userSchema, "user");

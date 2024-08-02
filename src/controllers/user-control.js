@@ -185,6 +185,19 @@ async function updateProfile(
       occupation: occupation,
       nickname: nickname,
     };
+
+    const r = await userService.updateUserProfile(filter, update);
+    return r;
+  } catch (error) {
+    throw new Error("error in updateProfile: " + error.message);
+  }
+}
+async function updateAvatar(username, avatarURL) {
+  try {
+    const filter = { username: username };
+    const update = {
+      avatarURL: avatarURL,
+    };
     const r = await userService.updateUserProfile(filter, update);
     return r;
   } catch (error) {
@@ -270,6 +283,7 @@ module.exports = {
   getProfile,
   getEmail,
   updateProfile,
+  updateAvatar,
   sendEmail,
   emailVerify,
 };

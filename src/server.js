@@ -9,7 +9,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
-    origin: "https://dc9mte7gy226s.cloudfront.net", // The frontend's origin
+    origin: ["https://dc9mte7gy226s.cloudfront.net", "http://localhost:3000"], // The frontend's origin
     methods: ["GET", "POST"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -35,7 +35,7 @@ const {
 } = require("./controllers/socket-control");
 
 const corsOptions = {
-  origin: "http://localhost:3000", // The frontend's origin
+  origin: ["https://dc9mte7gy226s.cloudfront.net", "http://localhost:3000"], // The frontend's origin
   credentials: true, // This allows cookies to be sent
 };
 
