@@ -84,14 +84,23 @@ async function searchPost(
       throw e;
     }
     const robj = {};
-    for (let i = 0; i < r.length; i++) {
-      const pic = await userService.getUserProfile(r[i].author);
-      r[i].avatar = pic.avatarURL;
-    }
-    robj.data = r;
+    const usernames = [...new Set(r.map((post) => post.author))];
+    const filterUser = { username: { $in: usernames } };
+    const users = await userService.findUser(filterUser);
+    const userMap = {};
+    users.forEach((user) => {
+      userMap[user.username] = user.avatarURL;
+    });
+    const posts = r.map((post) => {
+      console.log(userMap["12345"]);
+      return { ...post, avatar: userMap[post.author] || null };
+    });
+    console.log(posts);
+    robj.data = posts;
 
     return robj;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }

@@ -22,7 +22,7 @@ class PostService {
     try {
       console.log(filter);
       const res = await postModel.find(filter, null, option);
-      return res;
+      return res.map((r) => r.toObject());
     } catch (error) {
       throw new Error("error in service: searchPost" + error.message);
     }

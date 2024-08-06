@@ -48,6 +48,16 @@ class UserService {
       throw new Error("error in getUserProfile: " + error.message);
     }
   }
+  async findUser(filter) {
+    try {
+      const res = await userModel
+        .find(filter)
+        .select({ password: 0, email: 0, otp: 0, verified: 0 });
+      return res;
+    } catch (error) {
+      throw new Error("error in findUser: " + error.message);
+    }
+  }
 
   async getUserEmail(username) {
     try {
