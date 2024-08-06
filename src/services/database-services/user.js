@@ -64,9 +64,7 @@ class UserService {
 
   async updateUserProfile(filter, update) {
     try {
-      const doc = await userModel.findOneAndUpdate(filter, update, {
-        new: true,
-      });
+      const doc = await userModel.findOneAndUpdate(filter, update);
       return doc;
     } catch (error) {
       throw new Error("error in updateUserProfile: " + error.message);

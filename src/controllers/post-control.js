@@ -2,6 +2,7 @@ const { search } = require("../routes/health");
 const { postService } = require("../services/database-services/post");
 const { nanoid } = require("nanoid");
 const { tagService } = require("../services/database-services/tag");
+const { userService } = require("../services/database-services/user");
 
 async function getPost(id, author, title, content, tags, origin) {
   try {
@@ -83,7 +84,12 @@ async function searchPost(
       throw e;
     }
     const robj = {};
+    for (let i = 0; i < r.length; i++) {
+      const pic = await userService.getUserProfile(r[i].author);
+      r[i].avatar = pic.avatarURL;
+    }
     robj.data = r;
+
     return robj;
   } catch (error) {
     throw error;

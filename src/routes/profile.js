@@ -155,6 +155,15 @@ router.post(
 
         avatarURL
       );
+      if (doc.avatarURL) {
+        const delparams = {
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: doc.avatarURL, // File name you want to save as in S3
+        };
+        s3.deleteObject(delparams, function (err, data) {
+          if (err) console.log(err); // an error occurred
+        });
+      }
 
       res.status(200).send({
         success: true,
