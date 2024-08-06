@@ -116,6 +116,21 @@ router.post(
   upload.single("avatar"),
   async (req, res) => {
     try {
+      if (!req.file) {
+        return res.status(400).send("No file uploaded.");
+      }
+
+      // Check if the file type is an image
+      const fileTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/bmp",
+        "image/webp",
+      ];
+      if (!fileTypes.includes(req.file.mimetype)) {
+        return res.status(400).send("Only image files are allowed.");
+      }
       const { username } = req.query;
       if (!username) {
         res.status(400).send({
