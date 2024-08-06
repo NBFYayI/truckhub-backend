@@ -142,7 +142,7 @@ router.post(
 
       // const info = await userInfo(username);
       // console.log(info);
-      const avatarURL = `avatars/${Date.now()}_${req.file.originalname}`;
+      const avatarURL = `avatars/${Date.now()}_${username}`;
       const params = {
         Bucket: process.env.AWS_S3_BUCKET,
         Key: avatarURL, // File name you want to save as in S3
