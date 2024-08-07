@@ -103,7 +103,6 @@ async function setRead(msgids) {
 
 async function userSearch(keyword) {
   try {
-    console.log(keyword + " fuckyou");
     const filter = {};
     const options = {};
     if (keyword.trim()) {
@@ -111,6 +110,22 @@ async function userSearch(keyword) {
     } else {
       throw new Error("keyword cannot be empty");
     }
+
+    const users = await userService.searchUser(filter, options);
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getAvatars(usernames) {
+  try {
+    const filter = {};
+    const options = {};
+    if (!usernames || usernames.length === 0) {
+      throw new Error("username cannot be empty");
+    }
+    filter.username = { $in: usernames };
 
     const users = await userService.searchUser(filter, options);
     return users;

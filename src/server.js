@@ -115,6 +115,14 @@ io.on("connection", (socket) => {
       socket.emit("myError", error.message);
     }
   });
+  socket.on("askAvatar", async (usernames) => {
+    try {
+      const result = await getAvatars(usernames);
+      socket.emit("askAvatar", result);
+    } catch (error) {
+      socket.emit("myError", error.message);
+    }
+  });
 });
 
 server.listen(port, () => {
