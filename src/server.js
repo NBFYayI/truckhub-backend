@@ -74,7 +74,9 @@ io.on("connection", (socket) => {
       socket.join(username);
       console.log(`${username}joined room`);
       const msgs = await getAllMessages(username);
+      const user = await getAvatars(username);
       socket.emit("allMessages", msgs);
+      socket.emit("currentUser", user);
     } catch (error) {
       socket.emit("myError", error.message);
     }
