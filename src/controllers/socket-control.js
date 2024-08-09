@@ -140,4 +140,5 @@ module.exports = {
   getConvs,
   setRead,
   userSearch,
+  getAvatars,
 };

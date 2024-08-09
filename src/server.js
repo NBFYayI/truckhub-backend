@@ -32,6 +32,7 @@ const {
   setRead,
   sendMessage,
   userSearch,
+  getAvatars,
 } = require("./controllers/socket-control");
 
 const corsOptions = {
@@ -117,6 +118,7 @@ io.on("connection", (socket) => {
   });
   socket.on("askAvatar", async (usernames) => {
     try {
+      console.log(usernames);
       const result = await getAvatars(usernames);
       socket.emit("askAvatar", result);
     } catch (error) {
