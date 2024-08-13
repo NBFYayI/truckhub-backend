@@ -12,6 +12,25 @@ const {
   getTag,
 } = require("../controllers/post-control");
 const postVerify = require("../middleware/postAuth");
+const avatarVerify = require("../middleware/avatarAuth");
+const { s3 } = require("../configs/aws");
+const multer = require("multer");
+const multerS3 = require("multer-s3");
+require("dotenv").config();
+
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.AWS_S3_BUCKET,
+
+    metadata: function (req, file, cb) {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: function (req, file, cb) {
+      cb(null, `uploads/${Date.now()}_${file.originalname}`);
+    },
+  }),
+});
 
 router.get("/", async (req, res) => {
   try {
@@ -137,6 +156,42 @@ router.post("/new", postVerify, async (req, res) => {
     }
   }
 });
+
+router.post(
+  "/images",
+  avatarVerify,
+  upload.array("images", 10),
+  async (req, res) => {
+    try {
+      const fileInfos = req.files.map((file) => ({
+        filename: file.key, // The S3 key (file path in S3)
+
+        url: file.location, // The S3 URL of the uploaded file
+        originalName: file.originalname,
+      }));
+      console.log(fileInfos);
+
+      res.status(200).send({
+        success: true,
+        message: "successfully created post",
+        data: fileInfos,
+      });
+    } catch (error) {
+      if (error.code) {
+        res.status(error.code).send({
+          success: false,
+          message: "cannot create post: " + error.message,
+        });
+      } else {
+        console.error(error.message);
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    }
+  }
+);
 
 router.post("/update", postVerify, async (req, res) => {
   try {
