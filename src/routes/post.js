@@ -15,22 +15,17 @@ const postVerify = require("../middleware/postAuth");
 const avatarVerify = require("../middleware/avatarAuth");
 const { s3 } = require("../configs/aws");
 const multer = require("multer");
-const multerS3 = require("multer-s3");
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 require("dotenv").config();
 
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: process.env.AWS_S3_BUCKET,
-
-    metadata: function (req, file, cb) {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: function (req, file, cb) {
-      cb(null, `uploads/${Date.now()}_${file.originalname}`);
-    },
-  }),
-});
+const fileTypes = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/bmp",
+  "image/webp",
+];
 
 router.get("/", async (req, res) => {
   try {
@@ -160,15 +155,40 @@ router.post("/new", postVerify, async (req, res) => {
 router.post(
   "/images",
   avatarVerify,
-  upload.array("images", 10),
+  upload.array("images"),
   async (req, res) => {
     try {
-      const fileInfos = req.files.map((file) => ({
-        filename: file.key, // The S3 key (file path in S3)
+      const fileInfos = [];
+      req.files.forEach(async (file) => {
+        if (!fileTypes.includes(req.file.mimetype)) {
+          const e = new Error("only image files are allowed");
+          e.code = 400;
+          throw e;
+        }
+        const imageURL = `postImages/${Date.now()}_${file.originalname}`;
+        const params = {
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: imageURL, // File name you want to save as in S3
+          Body: file.buffer,
+          ContentType: file.mimetype,
+        };
+        const uploadToS3 = (params) => {
+          return new Promise((resolve, reject) => {
+            s3.upload(params, (err, data) => {
+              if (err) {
+                const e = new Error("Failed to upload image.");
+                e.code = 500;
+                return reject(e);
+              }
+              resolve(data);
+            });
+          });
+        };
+        const data = await uploadToS3(params);
 
-        url: file.location, // The S3 URL of the uploaded file
-        originalName: file.originalname,
-      }));
+        console.log(`File uploaded successfully. ${data.Location}`);
+        fileInfos.push(imageURL);
+      });
       console.log(fileInfos);
 
       res.status(200).send({
