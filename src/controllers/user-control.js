@@ -108,27 +108,38 @@ async function changePassword(username, oldPass, newPass) {
     //throw new Error("error in createUser: " + error.message);
   }
 }
-async function changeEmail(username, email) {
+async function changeEmail(username, email, code) {
   try {
-    const usr = await userService.getUserEmail(username);
+    const usr = await userService.getUser(username);
     //console.log(r);
     if (!usr) {
       //return 1;
       const e = new Error("username not found");
-      e.code = "404";
+      e.code = 404;
       throw e;
-      //throw new Error("username not found");
     }
     if (usr.email === email) {
       const e = new Error("email cannot be the same");
-      e.code = "400";
+      e.code = 400;
+      throw e;
+    }
+    if (usr.otp.code !== code) {
+      const e = new Error("incorrect otp");
+      e.code = 401;
+      throw e;
+    }
+    const rdate = usr.otp.timestamp;
+    const date = new Date();
+    if (date.getTime() - rdate.getTime() >= 10 * 60 * 1000) {
+      const e = new Error("otp expired");
+      e.code = 403;
       throw e;
     }
 
     const filter = { username: username };
     const update = {
       email: email,
-      verified: false,
+      verified: true,
     };
     const r = await userService.updateUser(filter, update);
 
@@ -236,6 +247,43 @@ async function sendEmail(username) {
     //throw new Error(error.message);
   }
 }
+
+async function sendNewEmailCode(username, email) {
+  try {
+    const r = await userService.getUser(username);
+    //console.log(r);
+    if (!r) {
+      //return 1;
+      const e = new Error("username not found");
+      e.code = "404";
+      throw e;
+      //throw new Error("username not found");
+    }
+    if (r.email === email) {
+      const e = new Error("email cannot be the same");
+      e.code = 400;
+      throw e;
+    }
+    const rdate = r.otp.timestamp;
+    const date = new Date();
+    if (date.getTime() - rdate.getTime() <= 30 * 1000) {
+      const e = new Error("request too frequent");
+      e.code = 403;
+      throw e;
+    }
+    const code = Math.floor(100000 + Math.random() * 900000);
+    const otp = { code: code, timestamp: date };
+    const filter = { username: username };
+
+    const update = { otp: otp };
+    const up = await userService.updateUser(filter, update);
+    await mailService.sendEmail(username, email, code);
+    return 0;
+  } catch (error) {
+    throw error;
+    //throw new Error(error.message);
+  }
+}
 async function emailVerify(username, code) {
   try {
     const r = await userService.getUser(username);
@@ -286,4 +334,5 @@ module.exports = {
   updateAvatar,
   sendEmail,
   emailVerify,
+  sendNewEmailCode,
 };

@@ -9,6 +9,8 @@ const {
   changeEmail,
   getEmail,
   updateAvatar,
+  sendEmail,
+  sendNewEmailCode,
 } = require("../controllers/user-control");
 const multer = require("multer");
 // const upload = multer({ dest: "uploads/" });
@@ -230,12 +232,41 @@ router.post("/password", profileVerify, async (req, res) => {
   }
 });
 
+router.post("/newotp", profileVerify, async (req, res) => {
+  try {
+    const username = req.body.username;
+
+    const email = req.body.email;
+    const doc = await sendNewEmailCode(username, email);
+
+    res.status(200).send({
+      success: true,
+      message: "successfully sent code",
+      data: null,
+    });
+  } catch (error) {
+    if (error.code) {
+      res.status(error.code).send({
+        success: false,
+        message: "failed to send code: " + error.message,
+      });
+    } else {
+      console.error(error.message);
+      res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+});
+
 router.post("/email", profileVerify, async (req, res) => {
   try {
     const username = req.body.username;
 
     const email = req.body.email;
-    const doc = await changeEmail(username, email);
+    const code = req.body.code;
+    const doc = await changeEmail(username, email, code);
 
     res.status(200).send({
       success: true,
