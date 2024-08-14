@@ -159,8 +159,9 @@ router.post(
   async (req, res) => {
     try {
       const fileInfos = [];
-      req.files.forEach(async (file) => {
-        if (!fileTypes.includes(req.file.mimetype)) {
+
+      for (const file of req.files) {
+        if (!fileTypes.includes(file.mimetype)) {
           const e = new Error("only image files are allowed");
           e.code = 400;
           throw e;
@@ -172,7 +173,8 @@ router.post(
           Body: file.buffer,
           ContentType: file.mimetype,
         };
-        const uploadToS3 = (params) => {
+
+        const uploadToS3 = async (params) => {
           return new Promise((resolve, reject) => {
             s3.upload(params, (err, data) => {
               if (err) {
@@ -184,12 +186,12 @@ router.post(
             });
           });
         };
-        const data = await uploadToS3(params);
 
+        const data = await uploadToS3(params);
         console.log(`File uploaded successfully. ${data.Location}`);
         fileInfos.push(imageURL);
-      });
-      console.log(fileInfos);
+      }
+      console.log("193" + fileInfos);
 
       res.status(200).send({
         success: true,
