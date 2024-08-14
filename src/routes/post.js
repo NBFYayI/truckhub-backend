@@ -121,6 +121,7 @@ router.post("/new", postVerify, async (req, res) => {
     const status = req.body.status;
     const latitude = req.body.latitude;
     const longitude = req.body.longitude;
+    const imageURLs = req.body.imageURLs;
 
     const doc = await makeNewPost(
       author,
@@ -129,7 +130,8 @@ router.post("/new", postVerify, async (req, res) => {
       tags,
       status,
       latitude,
-      longitude
+      longitude,
+      imageURLs
     );
     res.status(200).send({
       success: true,

@@ -112,7 +112,8 @@ async function makeNewPost(
   tags,
   status,
   latitude,
-  longitude
+  longitude,
+  imageURLs
 ) {
   try {
     if (!author || !title || !content) {
@@ -141,6 +142,9 @@ async function makeNewPost(
     }
     if (longitude !== undefined) {
       newPost.longitude = longitude;
+    }
+    if (imageURLs) {
+      newPost.imageURLs = imageURLs;
     }
 
     const r = await postService.createPost(newPost);

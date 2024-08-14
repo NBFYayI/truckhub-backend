@@ -19,6 +19,7 @@ const postSchema = new mongoose.Schema({
   isComment: { type: Boolean, default: false },
   latitude: Number,
   longitude: Number,
+  imageURLs: [String],
 });
 
 postSchema.index({ title: "text", content: "text" });
