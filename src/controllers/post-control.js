@@ -47,8 +47,10 @@ async function searchPost(
 
     //if (id) filter._id = id;
     if (author) filter.author = author;
-    if (title) filter.title = new RegExp("^" + title, "i");
-    if (content) filter.content = new RegExp(content, "i");
+
+    if (title) filter["$text"] = { $search: title };
+    // if (title) filter.title = new RegExp("^" + title, "i");
+    // if (content) filter.content = new RegExp(content, "i");
     if (tags && tags.length) filter.tags = { $in: tags };
     if (origin) filter.origin = origin;
     if (cFlag !== undefined) filter.isComment = cFlag;

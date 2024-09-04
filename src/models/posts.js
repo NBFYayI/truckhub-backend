@@ -22,8 +22,6 @@ const postSchema = new mongoose.Schema({
   imageURLs: [String],
 });
 
-postSchema.index({ title: "text", content: "text" });
-
 const postModel = userDBConection.model("posts", postSchema, "posts");
 postModel.createIndexes();
 
