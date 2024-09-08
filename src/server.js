@@ -27,6 +27,12 @@ const messageRoute = require("./routes/message");
 const socketVerify = require("./middleware/socketAuth");
 
 //Import socket control
+
+const rateLimitWindowMs = 60000; // 1 minute
+const maxEventsPerWindow = 10; // Limit to 10 events per minute
+
+const clientEventCount = new Map(); // Stores event count and timestamp for each client
+
 const {
   getAllMessages,
   setRead,
@@ -68,7 +74,8 @@ io.on("connection", (socket) => {
   console.log("a user connected");
 
   socket.on("disconnect", () => {
-    console.log("a user disconnected");
+    console.log(`Client disconnected: ${socket.id}`);
+    clientEventCount.delete(socket.id); // Clean up when the client disconnects
   });
   socket.on("login", async (username) => {
     try {
@@ -96,16 +103,54 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", async (message) => {
     try {
       console.log(message);
-      if (!message.from || !message.to || !message.content) {
-        throw new Error("invalid message");
+      const currentTime = Date.now();
+      const clientData = clientEventCount.get(socket.id) || {
+        count: 0,
+        startTime: currentTime,
+      };
+
+      if (currentTime - clientData.startTime > rateLimitWindowMs) {
+        // Reset the counter and start time after the time window passes
+        clientData.count = 0;
+        clientData.startTime = currentTime;
       }
-      const result = await sendMessage(
-        message.from,
-        message.to,
-        message.content
-      );
-      socket.emit("sendMessage", result);
-      io.to(message.to).emit("sendMessage", result);
+      if (clientData.count < maxEventsPerWindow) {
+        clientData.count += 1;
+        clientEventCount.set(socket.id, clientData);
+
+        // Handle the event
+        if (!message.from || !message.to || !message.content) {
+          throw new Error("invalid message");
+        }
+        const result = await sendMessage(
+          message.from,
+          message.to,
+          message.content
+        );
+        socket.emit("sendMessage", result);
+        io.to(message.to).emit("sendMessage", result);
+      } else {
+        // Rate limit exceeded
+        console.log(`Rate limit exceeded for ${socket.id}`);
+        const retryAfterMs =
+          rateLimitWindowMs - (currentTime - clientData.startTime);
+        socket.emit("rate_limit_exceeded", {
+          message: "Rate limit exceeded. Please try again later.",
+          retryAfter: retryAfterMs,
+        });
+        throw new Error("Rate limit exceeded");
+      }
+
+      // if (!message.from || !message.to || !message.content) {
+      //   throw new Error("invalid message");
+      // }
+      // const result = await sendMessage(
+      //   message.from,
+      //   message.to,
+      //   message.content
+      // );
+      // socket.emit("sendMessage", result);
+      // io.to(message.to).emit("sendMessage", result);
     } catch (error) {
       socket.emit("myError", error.message);
     }
