@@ -54,20 +54,20 @@ async function searchPost(
     if (tags && tags.length) filter.tags = { $in: tags };
     if (origin) filter.origin = origin;
     if (cFlag !== undefined) filter.isComment = cFlag;
-    if (latitude && longitude && dist) {
-      const latChange = parseFloat(dist) / 69;
-      const longChange =
-        parseFloat(dist) /
-        (69 * Math.cos((parseFloat(latitude) * Math.PI) / 180));
-      filter.latitude = {
-        $gte: parseFloat(latitude) - latChange,
-        $lte: parseFloat(latitude) + latChange,
-      };
-      filter.longitude = {
-        $gte: parseFloat(longitude) - longChange,
-        $lte: parseFloat(longitude) + longChange,
-      };
-    }
+    // if (latitude && longitude && dist) {
+    //   const latChange = parseFloat(dist) / 69;
+    //   const longChange =
+    //     parseFloat(dist) /
+    //     (69 * Math.cos((parseFloat(latitude) * Math.PI) / 180));
+    //   filter.latitude = {
+    //     $gte: parseFloat(latitude) - latChange,
+    //     $lte: parseFloat(latitude) + latChange,
+    //   };
+    //   filter.longitude = {
+    //     $gte: parseFloat(longitude) - longChange,
+    //     $lte: parseFloat(longitude) + longChange,
+    //   };
+    // }
     const sortCriteria = { isComment: "asc" };
     // sortCriteria[sortfield] = order;
     if (!sortfield) {
@@ -94,10 +94,10 @@ async function searchPost(
       userMap[user.username] = user.avatarURL;
     });
     const posts = r.map((post) => {
-      console.log(userMap["12345"]);
+      //console.log(userMap["12345"]);
       return { ...post, avatar: userMap[post.author] || null };
     });
-    console.log(posts);
+    //console.log(posts);
     robj.data = posts;
 
     return robj;
@@ -139,10 +139,10 @@ async function makeNewPost(
     if (status) {
       newPost.status = status;
     }
-    if (latitude !== undefined) {
+    if (latitude !== undefined && latitude !== null) {
       newPost.latitude = latitude;
     }
-    if (longitude !== undefined) {
+    if (longitude !== undefined && longitude !== null) {
       newPost.longitude = longitude;
     }
     if (imageURLs) {
